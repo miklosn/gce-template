@@ -38,7 +38,7 @@ The `dump` filter is useful for discovering what is actually available in our da
 
 Another data source we have available is `disks`, again available as a dictionary. This means we can 'join' our data sources in the templates. The following example iterates through the virtual machines, and outputs an comma separated inventory with the total size of the attached disks rolled up. Create a template file called `inventory_rollup.j2`:
 
-```jinja2
+```django
 Name,Zone,Machine type,Internal IP,Nat IP,Total disk
 {% for _, vm in vms %}
     {% set total = 0 %}
