@@ -20,13 +20,13 @@ The program queries the [Google Compute Engine API](https://cloud.google.com/com
 * run the program on a GCE VM which has a default service account set up with the neccessary privileges, or
 * have `gcloud` set up with neccessary permissions and Application Default Credentials initalized with `gcloud auth application-default login`.
 
-## Basics
+## Templating basics
 
-`gce-template` can process a template from `stdin` or from an input file with the `-t` or `--template` command line parameter. By default, it outputs to `stdout` but an output path can be specified with the `-o` or `--output` parameter.
+`gce-template` can process a template from `stdin` or from an input file with the `-t` or `--template` command line parameter. By default, it outputs to `stdout` but an output path can also be specified with the `-o` or `--output` parameter.
 
-The program integrates the [Nunjucks](https://mozilla.github.io/nunjucks/templating.html) engine from Mozilla which can be considered a port of jinja2, well known if not for else, then it's wide use in Ansible circles.
+The program integrates the [Nunjucks](https://mozilla.github.io/nunjucks/templating.html) engine from Mozilla which can be considered a port of jinja2, well known for it's wide use in Ansible circles if not for else.
 
-The template receives various data sources from the program, one of these is called `vms` which is fetched by default and contains information about virtual machines on GCE, in the form of a dictionary keyed to self-links.
+The template receives input from various data sources from the program, one of these is called `vms` which is available by default and contains information about virtual machines on GCE, in the form of a dictionary keyed to self-links.
 
 With this knowledge, we can now output everything we know about our vms with the [`dump`](https://mozilla.github.io/nunjucks/templating.html#dump) function:
 
@@ -34,4 +34,23 @@ With this knowledge, we can now output everything we know about our vms with the
 $ echo "{{ vms | dump(2) }}" | gce-template
 ```
 
-Now we are getting somewhere! The `dump` filter is useful for discovering what is actually available in our data sources.
+The `dump` filter is useful for discovering what is actually available in our data sources.
+
+Another data source we have available is `disks`, again available as a dictionary. This means we can 'join' our data sources in the templates. The following example iterates through the virtual machines, and outputs an comma separated inventory with the total size of the attached disks rolled up. This time we will save it to a proper csv file:
+
+`inventory_rollup.j2:`
+```jinja2
+Name,Zone,Machine type,Internal IP,Nat IP,Total disk
+{% for _, vm in vms %}
+    {% set total = 0 %}
+    {% for disk in vm.disks %}
+        {% set total = total + disks[disk.source].sizeGb %}
+    {% endfor %}
+    {{- vm.name }},{{vm.zone}},{{vm.machineType}},{{vm.networkInterfaces[0].networkIP}},{{vm.networkInterfaces[0].accessConfigs[0].natIP}},{{total}}
+{% endfor %}
+```
+```shell
+$ gce-template -t inventory_rollup.j2 -o inventory.csv
+```
+
+Now we are getting somewhere!
