@@ -39,11 +39,13 @@ let previousResults = '';
 
 const handleChanges = async (previous, current) => {
   const prevfile = tempy.file();
-  log.debug(`Writing previous state to ${prevfile}`);
-  fs.writeFileSync(prevfile, previous);
-  const curfile = tempy.file();
-  fs.writeFileSync(curfile, current);
-  log.debug(`Writing current state to ${curfile}`);
+  if (program.onchange) {
+    log.debug(`Writing previous state to ${prevfile}`);
+    fs.writeFileSync(prevfile, previous);
+    const curfile = tempy.file();
+    fs.writeFileSync(curfile, current);
+    log.debug(`Writing current state to ${curfile}`);
+  }
   if (program.output) {
     const tmpfile = tempy.file();
     log.debug(`Writing buffer to ${tmpfile}`);
