@@ -36,7 +36,7 @@ $ echo "{{ vms | dump(2) }}" | gce-template
 
 The `dump` filter is useful for discovering what is actually available in our data sources.
 
-Another data source we have available is `disks`, again available as a dictionary. This means we can 'join' our data sources in the templates. The following example iterates through the virtual machines, and outputs an comma separated inventory with the total size of the attached disks rolled up. Create a template file called `inventory_rollup.j2` (you can use any extension).
+Another data source we have available is called `disks`, again available as a dictionary. This means we can "join" our data sources in the templates. The following example iterates through the virtual machines, and outputs a comma separated inventory with the total size of the attached disks rolled up. Create a template file called `inventory_rollup.j2` (you can use any extension).
 
 ```django
 Name,Zone,Machine type,Internal IP,Nat IP,Total disk
@@ -53,7 +53,7 @@ This time let's output it to a proper csv file:
 $ gce-template -o inventory.csv inventory_rollup.j2
 ```
 
-Now we are getting somewhere! `gce-template` applies various transformations on the data received from the GCE API, like converting fields to proper data types, simplifying presentation and removing unneccessary clutter.
+Now we are getting somewhere! `gce-template` applies various transformations to the data received from the GCE API, like converting fields to proper data types, simplifying presentation and removing unneccessary clutter.
 
 ## Usage
 
@@ -112,7 +112,7 @@ The program also supports running an user-specified shell command when a change 
 $ gce-template -o /etc/haproxy/haproxy.cfg -w 100 --onchange "systemctl reload haproxy" /etc/haproxy/haproxy.tmpl
 ```
 
-The source template is compiled at startup time, so changing the template while watch is running will *not* trigger a change event.
+The source template is compiled at startup time, so changing the source file while watch is running will *not* trigger a change event.
 
 Furthermore, only input data that is actually referenced in the templates will trigger changes.
 
