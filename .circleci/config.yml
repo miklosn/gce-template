@@ -23,6 +23,7 @@ jobs:
           command: yarn run pkg
       - persist_to_workspace:
           root: bin
+          paths: *
 
   publish-github-release:
     docker:
