@@ -1,0 +1,24 @@
+{% macro service_group(service_group, port) %}
+backend {{ service_group }}
+  mode tcp
+  balance roundrobin
+  {% for _, vm in vms %}
+  {% if vm.labels.service_group == service_group %}
+  server {{ vm.name }} {{vm.networkInterfaces[0].networkIP}}:{{port}} check
+  {%endif%}
+  {% endfor %}
+{% endmacro %}
+
+frontend my-first-group
+  bind *:3306
+  mode tcp
+  default_backend my-service-group
+
+{{ service_group ('my-first-group', '3306') }}
+
+frontend my-second-group
+  bind *:3307
+  mode tcp
+  default_backend my-service-group
+
+{{ service_group ('my-second-group', '3306') }}

@@ -26,19 +26,21 @@
   "author": "Miklos Niedermayer <miklos.niedermayer@cray.one>",
   "dependencies": {
     "@google-cloud/compute": "^0.11.0",
-    "cli-table": "^0.3.1",
     "commander": "^2.19.0",
+    "get-stdin": "^6.0.0",
     "googleapis": "^37.2.0",
     "nunjucks": "^3.1.7",
-    "signale": "^1.3.0"
+    "nunjucks-date-filter": "^0.1.1",
+    "signale": "^1.3.0",
+    "tempy": "^0.2.1"
   },
   "devDependencies": {
     "eslint": "^5.13.0",
     "eslint-config-prettier": "^4.0.0",
     "eslint-plugin-node": "^8.0.1",
     "eslint-plugin-prettier": "^3.0.1",
-    "prettier": "^1.16.4",
-    "pkg": "^4.3.4"
+    "pkg": "^4.3.4",
+    "prettier": "^1.16.4"
   },
   "eslintConfig": {
     "parserOptions": {

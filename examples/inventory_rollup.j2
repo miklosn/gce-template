@@ -1,0 +1,8 @@
+Name,Zone,Machine type,Internal IP,Nat IP,Total disk
+{% for _, vm in vms %}
+    {% set total = 0 %}
+    {% for disk in vm.disks %}
+        {% set total = total + disks[disk.source].sizeGb %}
+    {% endfor %}
+    {{- vm.name }},{{vm.zone}},{{vm.machineType}},{{vm.networkInterfaces[0].networkIP}},{{vm.networkInterfaces[0].accessConfigs[0].natIP}},{{total}}
+{% endfor %}
