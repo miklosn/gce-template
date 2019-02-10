@@ -57,21 +57,69 @@ Now we are getting somewhere! `gce-template` applies various transformations on 
 
 ## Usage
 
-The `-h` or `--help` command line flag list all options:
+The `-h` or `--help` command line flag lists all options:
 
 ```shell
 $ gce-template -h
 ```
 
-### Watch mode
+### Watch mode (`-w` and `--onchange`)
 
-`gce-template` supports 'watch mode', in which it monitor the data sources for changes, and in case of a change, trigger generating the output.
+`gce-template` supports *watch mode*, in which it keeps itself in the foreground monitoring the data sources for changes, and in case of a change, triggering generating the output.
+
+A not uncommon scenario would be to use `gce-template` to provide configuration for services that do not support dynamic discovery natively. The following example generates (half) a haproxy configuration, utilizing the [macro](https://mozilla.github.io/nunjucks/templating.html#macro) feature to provide a function to render backend groups based on metadata label selectors.
+
+```django
+{% macro service_group(service_group, port) %}
+backend {{ service_group }}
+  mode tcp
+  balance roundrobin
+  {% for _, vm in vms %}
+  {% if vm.labels.service_group == service_group %}
+  server {{ vm.name }} {{vm.networkInterfaces[0].networkIP}}:{{port}} check
+  {%endif%}
+  {% endfor %}
+{% endmacro %}
+
+frontend my-first-group
+  bind *:3306
+  mode tcp
+  default_backend my-service-group
+
+{{ service_group ('my-first-group', '3306') }}
+
+frontend my-second-group
+  bind *:3307
+  mode tcp
+  default_backend my-service-group
+
+{{ service_group ('my-second-group', '3306') }}
+```
 
 To enable watch mode, use `-w <seconds>` or `--watch <seconds>`, with seconds being mandatory and specifying the time to wait between polls.
 
 ```shell
-$ gce-template -o /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.tmpl
+$ gce-template -o /etc/haproxy/haproxy.cfg -w 100 /etc/haproxy/haproxy.tmpl
 ```
 
 > The Compute Engine Default API limit is 20/sec, metered every 100 seconds (so actually 2000/100 sec), keep this in mind when deploying to production. I would probably consider 100 seconds polling time appropriate for things like detecting auto scaled instances, with the value playing nicely with Google's limits.
 
+The program also supports running an user-specified shell command when a change happens with the `--onchange <command>` option:
+
+```shell
+$ gce-template -o /etc/haproxy/haproxy.cfg -w 100 --onchange "systemctl reload haproxy" /etc/haproxy/haproxy.tmpl
+```
+
+The source template is compiled at startup time, so changing the template while watch is running will *not* trigger a change event.
+
+Furthermore, only input data that is actually referenced in the templates will trigger changes.
+
+### Template engine
+
+The program utilizes the powerful [Nunjucks](https://mozilla.github.io/nunjucks/templating.html) engine in a configuration that makes the most sense in this application. Blocks are stripped and trimmed (will not generate unnecessary whitespaces), autoescaping is disabled. *Never pull your templates blindly from someone else.*
+
+The full power of Nunjucks is available, including child templates, blocks, extends and referencing other files relative to the template, even when processing a template through  standard input.
+
+Furthermore, the [moment.js](https://momentjs.com/docs/#/displaying/) library is integrated as the `date` filter, adding a full range of datetime functions.
+
+`{{ vm.creationTimeStamp | date("add", 7, "days") | date }}
