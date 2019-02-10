@@ -2,7 +2,7 @@
 
 The program queries the [Google Compute Engine API](https://cloud.google.com/compute/docs/reference/rest/v1/) and merges the received data with a user specified template. It can output the results to the standard output or it can update a file (eg. configuration file) on the filesystem. It also supports a 'watch' mode, continously polling for changes and it can run a user specified shell command when it detects a change.
 
-# Usage
+# Getting started
 
 ## Installation
 
@@ -36,9 +36,8 @@ $ echo "{{ vms | dump(2) }}" | gce-template
 
 The `dump` filter is useful for discovering what is actually available in our data sources.
 
-Another data source we have available is `disks`, again available as a dictionary. This means we can 'join' our data sources in the templates. The following example iterates through the virtual machines, and outputs an comma separated inventory with the total size of the attached disks rolled up. This time we will save it to a proper csv file:
+Another data source we have available is `disks`, again available as a dictionary. This means we can 'join' our data sources in the templates. The following example iterates through the virtual machines, and outputs an comma separated inventory with the total size of the attached disks rolled up. Create a template file called `inventory_rollup.j2`:
 
-`inventory_rollup.j2:`
 ```jinja2
 Name,Zone,Machine type,Internal IP,Nat IP,Total disk
 {% for _, vm in vms %}
@@ -49,8 +48,9 @@ Name,Zone,Machine type,Internal IP,Nat IP,Total disk
     {{- vm.name }},{{vm.zone}},{{vm.machineType}},{{vm.networkInterfaces[0].networkIP}},{{vm.networkInterfaces[0].accessConfigs[0].natIP}},{{total}}
 {% endfor %}
 ```
+This time let's output it to a proper csv file:
 ```shell
 $ gce-template -t inventory_rollup.j2 -o inventory.csv
 ```
 
-Now we are getting somewhere!
+Now we are getting somewhere! `gce-template` applies various transformations on the data received from the GCE API, like converting fields to proper data types, simplifying presentation and removing unneccessary clutter.
