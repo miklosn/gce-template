@@ -1,8 +1,29 @@
 {
-  "name": "gcewatch",
+  "name": "gce-template",
+  "description": "Template rendering, notifier for Google Compute Engine data",
   "version": "0.1.0",
-  "main": "index.js",
   "license": "MIT",
+  "main": "gce-template.js",
+  "bin": "gce-template.js",
+  "scripts": {
+    "pkg": "pkg --out-path bin ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/miklosn/gce-template.git"
+  },
+  "bugs": {
+    "url": "https://github.com/miklosn/gce-template/issues"
+  },
+  "homepage": "https://github.com/miklosn/gce-template",
+  "keywords": [
+    "cli",
+    "gce",
+    "gcp",
+    "templating",
+    "template"
+  ],
+  "author": "Miklos Niedermayer <miklos.niedermayer@cray.one>",
   "dependencies": {
     "@google-cloud/compute": "^0.11.0",
     "cli-table": "^0.3.1",
@@ -16,7 +37,8 @@
     "eslint-config-prettier": "^4.0.0",
     "eslint-plugin-node": "^8.0.1",
     "eslint-plugin-prettier": "^3.0.1",
-    "prettier": "^1.16.4"
+    "prettier": "^1.16.4",
+    "pkg": "^4.3.4"
   },
   "eslintConfig": {
     "parserOptions": {
@@ -39,5 +61,11 @@
   },
   "prettier": {
     "singleQuote": true
+  },
+  "pkg": {
+    "targets": [
+      "node10-macos-x64",
+      "node10-linux-x64"
+    ]
   }
 }
