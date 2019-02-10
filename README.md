@@ -148,4 +148,4 @@ Contributions of all forms are welcome, including:
 
 `gce-template` is released under the MIT license.
 
-Made with ❤️in Jakarta.
+Made with ❤️ in Jakarta.
