@@ -63,6 +63,8 @@ The `-h` or `--help` command line flag lists all options:
 $ gce-template -h
 ```
 
+The `-v` or `--verbose` flag is available for verbose output on stderr.
+
 ### Watch mode (`-w` and `--onchange`)
 
 `gce-template` supports *watch mode*, in which it keeps itself in the foreground monitoring the data sources for changes, and in case of a change, triggering generating the output.
@@ -116,10 +118,34 @@ Furthermore, only input data that is actually referenced in the templates will t
 
 ### Template engine
 
-The program utilizes the powerful [Nunjucks](https://mozilla.github.io/nunjucks/templating.html) engine in a configuration that makes the most sense in this application. Blocks are stripped and trimmed (will not generate unnecessary whitespaces), autoescaping is disabled. *Never pull your templates blindly from someone else.*
+The program utilizes the powerful [Nunjucks](https://mozilla.github.io/nunjucks/templating.html) engine in a mode that makes most sense in this application. Blocks are stripped and trimmed (will not generate unnecessary whitespaces), autoescaping is disabled. *Never pull your templates blindly from someone else.*
 
 The full power of Nunjucks is available, including child templates, blocks, extends and referencing other files relative to the template, even when processing a template through  standard input.
 
-Furthermore, the [moment.js](https://momentjs.com/docs/#/displaying/) library is integrated as the `date` filter, adding a full range of datetime functions.
+Furthermore, the [moment.js](https://momentjs.com/docs/#/displaying/) library is integrated as the `date` filter, adding a full range of datetime formatting and manipulation options.
 
-`{{ vm.creationTimeStamp | date("add", 7, "days") | date }}
+`{{ vm.creationTimeStamp | date("add", 7, "days") | date }}`
+
+### Data sources
+
+The program currently supports the following data sources:
+
+* vms
+* disks
+
+## Contributing
+
+The project is still in it's infancy, rapidly developed in answer to real world frustrations. You can expect progress as it will be very useful in my work.
+
+Contributions of all forms are welcome, including:
+
+* use cases, examples
+* feature requests
+* bug reports
+* code contributions
+
+## License
+
+`gce-template` is released under the MIT license.
+
+Made with ❤️in Jakarta.
