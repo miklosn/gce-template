@@ -80,10 +80,12 @@ const handleChanges = async (previous, current) => {
 };
 
 const loop = async () => {
-  let [vms, disks] = [{}, {}];
+  let [vms, disks, images] = [{}, {}, {}];
   try {
-    [vms, disks] = await Promise.all([gce.getVMs(), gce.getDisks()]);
-    const results = await renderer.render(vms, disks);
+    [vms, disks, images] = await Promise.all([gce.getVMs(), gce.getDisks(), gce.getImages()]);
+    const results = await renderer.render(vms, disks, images);
+    // console.log('renderer');
+    // console.log(results);
     if (results == previousResults) {
       log.info('no changes');
     } else {

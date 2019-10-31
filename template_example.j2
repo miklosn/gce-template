@@ -1,0 +1,9 @@
+Name,Zone,Machine type,Internal IP,Nat IP,Diskname,Diskboot,DiskSize,Disktype, Servicetype, Imagename, ImageSize
+{% for _, vm in vms %}
+    {% for disk in vm.disks %}
+          {% for _, image in images %}
+          
+            {{- vm.name }},{{vm.zone}},{{vm.machineType}},{{vm.networkInterfaces[0].networkIP}},{{vm.networkInterfaces[0].accessConfigs[0].natIP}},{{disks[disk.source].name}},{{disk.boot}},{{disks[disk.source].sizeGb}},{{disks[disk.source].type}},{{vm.labels.service_type}},{{image.name}}, {{image.archiveSizeBytes}}
+          {% endfor %}
+    {% endfor %}
+{% endfor %}
