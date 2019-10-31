@@ -1,4 +1,4 @@
-Name,Zone,Machine type,Internal IP,Nat IP,Diskname,Diskboot,DiskSize,Disktype, Servicetype, Imagename, ImageSize
+Name,Zone,Machine type,Internal IP,Nat IP,Diskname,Diskboot,DiskSize(GB),Disktype, Servicetype, Imagename, ImageSize(GB)
 {% for _, vm in vms %}
     {% for disk in vm.disks %}
           {% for _, image in images %}
