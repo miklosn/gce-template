@@ -132,6 +132,7 @@ The program currently supports the following data sources:
 
 * vms
 * disks
+* images
 
 ## Contributing
 
