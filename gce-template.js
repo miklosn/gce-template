@@ -13,7 +13,7 @@ const log = logger.getLogger('main');
 const renderer = require('./lib/renderer');
 
 program
-  .version('0.2.0')
+  .version('0.2.1')
   .arguments('[template]')
   .option(
     '-w, --watch <seconds>',

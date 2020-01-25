@@ -1,7 +1,7 @@
 {
   "name": "gce-template",
   "description": "Template rendering, notifier for Google Compute Engine data",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "license": "MIT",
   "main": "gce-template.js",
   "bin": "gce-template.js",
